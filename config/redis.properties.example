@@ -1,0 +1,113 @@
+# Redis配置文件示例
+# 复制此文件为 redis.properties 并根据需要修改
+
+# ==============================================
+# 基础连接配置
+# ==============================================
+
+# 开发环境配置（默认）
+redis.host=localhost
+redis.port=30379
+redis.password=
+redis.connectionTimeout=2000
+redis.socketTimeout=2000
+
+# 连接池配置
+redis.pool.maxTotal=20
+redis.pool.maxIdle=10
+redis.pool.minIdle=5
+redis.pool.maxWaitMillis=1000
+redis.pool.testOnBorrow=true
+redis.pool.testOnReturn=false
+redis.pool.testWhileIdle=true
+
+# ==============================================
+# 环境特定配置
+# ==============================================
+
+# 生产环境配置
+#redis.host=production-redis.example.com
+#redis.port=6379
+#redis.password=your_production_password
+#redis.connectionTimeout=5000
+#redis.socketTimeout=5000
+#redis.pool.maxTotal=50
+#redis.pool.maxIdle=20
+#redis.pool.minIdle=10
+
+# 测试环境配置
+#redis.host=test-redis.example.com
+#redis.port=6379
+#redis.password=test_password
+#redis.pool.maxTotal=30
+#redis.pool.maxIdle=15
+
+# 本地Docker配置
+#redis.host=localhost
+#redis.port=6379
+
+# Kubernetes集群内部配置
+#redis.host=redis-service
+#redis.port=6379
+
+# ==============================================
+# 高级配置
+# ==============================================
+
+# SSL配置
+#redis.ssl=false
+#redis.ssl.keyStore=
+#redis.ssl.keyStorePassword=
+
+# 集群配置
+#redis.cluster.nodes=node1:6379,node2:6379,node3:6379
+#redis.cluster.maxRedirects=5
+
+# 哨兵模式配置
+#redis.sentinel.master=mymaster
+#redis.sentinel.nodes=sentinel1:26379,sentinel2:26379,sentinel3:26379
+
+# ==============================================
+# 性能调优
+# ==============================================
+
+# 批量操作配置
+redis.batch.size=100
+redis.pipeline.enabled=true
+redis.pipeline.batchSize=1000
+
+# 监控配置
+redis.monitor.enabled=true
+redis.monitor.statsInterval=30000
+
+# ==============================================
+# 日志和调试
+# ==============================================
+
+# 日志级别
+redis.log.level=INFO
+
+# 连接池监控
+redis.pool.monitor.enabled=true
+redis.pool.monitor.interval=60000
+
+# ==============================================
+# 使用说明
+# ==============================================
+
+# 1. 默认使用开发环境配置（localhost:30379 - Kubernetes NodePort）
+# 2. 取消注释相应的配置节来选择环境
+# 3. 支持的配置文件路径优先级：
+#    - 项目根目录 /redis.properties
+#    - config/redis.properties
+#    - src/main/resources/redis.properties
+#    - ~/.redis-demo/redis.properties
+# 4. 配置优先级：配置文件 > 环境变量 > 系统属性 > 默认值
+
+# 环境变量示例：
+# export REDIS_HOST=localhost
+# export REDIS_PORT=6379
+# export REDIS_PASSWORD=your_password
+
+# 系统属性示例：
+# java -Dredis.host=localhost -Dredis.port=30379 -jar app.jar

@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>org.example</groupId>
+    <artifactId>redisdemo01</artifactId>
+    <version>1.0.0</version>
+    <packaging>jar</packaging>
+
+    <name>Redis Demo</name>
+    <description>Redis数据结构完整示例和工具集，包含交互式CLI、性能测试、配置管理等功能</description>
+    <url>https://github.com/example/redisdemo01</url>
+
+    <licenses>
+        <license>
+            <name>MIT License</name>
+            <url>https://opensource.org/licenses/MIT</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <name>Example Developer</name>
+            <email>developer@example.com</email>
+        </developer>
+    </developers>
+
+    <properties>
+        <maven.compiler.source>22</maven.compiler.source>
+        <maven.compiler.target>22</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <jedis.version>5.1.2</jedis.version>
+        <maven.compiler.plugin.version>3.13.0</maven.compiler.plugin.version>
+        <maven.exec.plugin.version>3.1.0</maven.exec.plugin.version>
+    </properties>
+
+    <dependencies>
+        <!-- Redis客户端依赖 -->
+        <dependency>
+            <groupId>redis.clients</groupId>
+            <artifactId>jedis</artifactId>
+            <version>${jedis.version}</version>
+        </dependency>
+        
+        <!-- 可选：JSON处理（用于增强功能） -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>2.17.2</version>
+            <optional>true</optional>
+        </dependency>
+        
+        <!-- 可选：日志框架 -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>2.0.13</version>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+            <version>2.0.13</version>
+            <optional>true</optional>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <!-- 编译器插件 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>${maven.compiler.plugin.version}</version>
+                <configuration>
+                    <source>${maven.compiler.source}</source>
+                    <target>${maven.compiler.target}</target>
+                    <encoding>${project.build.sourceEncoding}</encoding>
+                    <showWarnings>true</showWarnings>
+                    <showDeprecation>true</showDeprecation>
+                </configuration>
+            </plugin>
+            
+            <!-- 执行插件，支持运行多个主类 -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>${maven.exec.plugin.version}</version>
+                <configuration>
+                    <mainClass>org.example.RedisExamples</mainClass>
+                    <arguments>
+                        <argument>--help</argument>
+                    </arguments>
+                </configuration>
+                <executions>
+                    <!-- Redis示例 -->
+                    <execution>
+                        <id>redis-examples</id>
+                        <goals>
+                            <goal>java</goal>
+                        </goals>
+                        <configuration>
+                            <mainClass>org.example.RedisExamples</mainClass>
+                            <arguments>
+                                <argument>--host</argument>
+                                <argument>localhost</argument>
+                                <argument>--port</argument>
+                                <argument>30379</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+                    <!-- Redis CLI -->
+                    <execution>
+                        <id>redis-cli</id>
+                        <goals>
+                            <goal>java</goal>
+                        </goals>
+                        <configuration>
+                            <mainClass>org.example.RedisCLI</mainClass>
+                        </configuration>
+                    </execution>
+                    <!-- Redis Benchmark -->
+                    <execution>
+                        <id>redis-benchmark</id>
+                        <goals>
+                            <goal>java</goal>
+                        </goals>
+                        <configuration>
+                            <mainClass>org.example.RedisBenchmark</mainClass>
+                        </configuration>
+                    </execution>
+                    <!-- Redis Config -->
+                    <execution>
+                        <id>redis-config</id>
+                        <goals>
+                            <goal>java</goal>
+                        </goals>
+                        <configuration>
+                            <mainClass>org.example.RedisConfig</mainClass>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            
+            <!-- 打包插件 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.4.2</version>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <mainClass>org.example.RedisExamples</mainClass>
+                            <addClasspath>true</addClasspath>
+                            <classpathPrefix>lib/</classpathPrefix>
+                        </manifest>
+                    </archive>
+                </configuration>
+            </plugin>
+            
+            <!-- 依赖复制插件 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>3.8.1</version>
+                <executions>
+                    <execution>
+                        <id>copy-dependencies</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.directory}/lib</outputDirectory>
+                            <overWriteReleases>false</overWriteReleases>
+                            <overWriteSnapshots>false</overWriteSnapshots>
+                            <overWriteIfNewer>true</overWriteIfNewer>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+    <profiles>
+        <!-- 开发环境配置 -->
+        <profile>
+            <id>development</id>
+            <activation>
+                <property>
+                    <name>env</name>
+                    <value>development</value>
+                </property>
+            </activation>
+            <properties>
+                <redis.host>localhost</redis.host>
+                <redis.port>30379</redis.port>
+            </properties>
+        </profile>
+        
+        <!-- 生产环境配置 -->
+        <profile>
+            <id>production</id>
+            <activation>
+                <property>
+                    <name>env</name>
+                    <value>production</value>
+                </property>
+            </activation>
+            <properties>
+                <redis.host>production-redis.example.com</redis.host>
+                <redis.port>6379</redis.port>
+            </properties>
+        </profile>
+        
+        <!-- 测试环境配置 -->
+        <profile>
+            <id>testing</id>
+            <activation>
+                <property>
+                    <name>env</name>
+                    <value>testing</value>
+                </property>
+            </activation>
+            <properties>
+                <redis.host>test-redis.example.com</redis.host>
+                <redis.port>6379</redis.port>
+            </properties>
+        </profile>
+    </profiles>
+
+</project>
